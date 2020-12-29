@@ -168,3 +168,18 @@ func Fv(rate float64, nper int64, pmt float64, pv float64, when paymentperiod.Ty
 	secondFactor := (1 + rate*when.Value()) * (factor - 1) / rate
 	return -pv*factor - pmt*secondFactor
 }
+
+
+/*
+Nper Computes the number of periodic payments.
+
+Payment Amount should be negative.
+
+References:
+	https://castle.eiu.edu/dmcgrady/bus3710/assign/excel_functions.html
+ */
+func Nper(rate float64, pmt float64, pv float64, fv float64, when paymentperiod.Type) int64{
+	factor := pmt * ( 1 + rate * when.Value()) / rate
+	nper := int64(math.Log((-fv+factor)/(pv+factor)) / math.Log(1+rate))
+	return nper
+}
