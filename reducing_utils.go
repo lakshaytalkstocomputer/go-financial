@@ -169,17 +169,32 @@ func Fv(rate float64, nper int64, pmt float64, pv float64, when paymentperiod.Ty
 	return -pv*factor - pmt*secondFactor
 }
 
-
 /*
-Nper Computes the number of periodic payments.
+Nper Computes the number of periodic payments by solving the following formula:
+ fv +
+ pv*(1+rate)**nper +
+ pmt*(1 + rate*when)/rate*((1 + rate)**nper - 1) == 0
 
-Payment Amount should be negative.
+ The derived formula comes out to be :
+    middle term = ( pmt * (1 + rate * when)
+                    -----------------------
+                             rate
+					Ln( (-fv  + middle term) / (pv + middle term))
+	nper  =       ------------------------------------------------
+						Ln( 1 + rate )
+
+Params:
+ rate :  interest rate
+ pmt : the amount of each payment made
+ pv : the current value of annuity
+ fv : the future value remaining after the final payment has been made.
+ when : Whether payments are due at the end (0) or beginning (1) of each period.
 
 References:
-	https://castle.eiu.edu/dmcgrady/bus3710/assign/excel_functions.html
- */
-func Nper(rate float64, pmt float64, pv float64, fv float64, when paymentperiod.Type) int64{
-	factor := pmt * ( 1 + rate * when.Value()) / rate
+	https://github.com/numpy/numpy-financial/blob/e3c2a4eccd1f44082597ace0550eb3daf20156fd/numpy_financial/_financial.py#L245
+*/
+func Nper(rate float64, pmt float64, pv float64, fv float64, when paymentperiod.Type) int64 {
+	factor := pmt * (1 + rate*when.Value()) / rate
 	nper := int64(math.Log((-fv+factor)/(pv+factor)) / math.Log(1+rate))
 	return nper
 }

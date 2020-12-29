@@ -234,11 +234,11 @@ func Test_PPmt(t *testing.T) {
 }
 
 func Test_Nper(t *testing.T) {
-	type args struct{
+	type args struct {
 		rate float64
-		pmt float64
-		pv float64
-		fv float64
+		pmt  float64
+		pv   float64
+		fv   float64
 		when paymentperiod.Type
 	}
 
@@ -250,35 +250,34 @@ func Test_Nper(t *testing.T) {
 		{
 			"7% per annum with payment amount -150 for 8000", args{
 				rate: 0.07 / 12,
-				pmt: -150,
-				pv: 8000.0,
-				fv: 0,
+				pmt:  -150,
+				pv:   8000.0,
+				fv:   0,
 				when: paymentperiod.ENDING,
 			}, 64,
-		},{
+		}, {
 			"7.5% per period with payment amount -2000 for 0 with future value 100000", args{
 				rate: 0.075,
-				pmt: -2000,
-				pv: 0,
-				fv: 100000,
+				pmt:  -2000,
+				pv:   0,
+				fv:   100000,
 				when: paymentperiod.ENDING,
 			}, 21,
-		},{
+		}, {
 			"10 Percent Per Period ", args{
 				rate: 0.1,
-				pmt: 0,
-				pv: -500,
-				fv: 1500,
+				pmt:  0,
+				pv:   -500,
+				fv:   1500,
 				when: paymentperiod.ENDING,
 			}, 11,
 		},
 	}
 
-
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Nper(tt.args.rate, tt.args.pmt, tt.args.pv, tt.args.fv, tt.args.when); got != tt.want{
-				t.Errorf("nper() = %v, want %v", got , tt.want)
+			if got := Nper(tt.args.rate, tt.args.pmt, tt.args.pv, tt.args.fv, tt.args.when); got != tt.want {
+				t.Errorf("nper() = %v, want %v", got, tt.want)
 			}
 		})
 	}
