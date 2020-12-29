@@ -171,17 +171,16 @@ func Fv(rate float64, nper int64, pmt float64, pv float64, when paymentperiod.Ty
 
 /*
 Nper Computes the number of periodic payments by solving the following formula:
+
  fv +
  pv*(1+rate)**nper +
  pmt*(1 + rate*when)/rate*((1 + rate)**nper - 1) == 0
 
  The derived formula comes out to be :
-    middle term = ( pmt * (1 + rate * when)
-                    -----------------------
-                             rate
-					Ln( (-fv  + middle term) / (pv + middle term))
-	nper  =       ------------------------------------------------
-						Ln( 1 + rate )
+   middle term =  (pmt * (1 + rate * when)) / (rate)
+   nper  = (Ln( (-fv  + middle term) / (pv + middle term))) / ( Ln( 1 + rate ))
+
+   where Ln is the Log with Natural Base
 
 Params:
  rate :  interest rate
